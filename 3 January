@@ -27,7 +27,7 @@ int numberOfBeams(vector<string>& bank) {
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Problem : Number of Laser Beams in a Bank (2125 Leetcode)
+Problem : Smallest window containing 0, 1 and 2
 
 Time Complexity : O(N)
 space Complexity : O(1)
