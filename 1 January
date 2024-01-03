@@ -1,0 +1,68 @@
+Problem : Assign Cookies (Leetcode 455)
+
+Time Complexity    : O(N * logN) + O(N)
+Space Complexity   : O(1)
+
+int findContentChildren(vector<int>& g, vector<int>& s) {
+    int i = 0;
+    int j = 0;
+    int count = 0;
+    int gsize = g.size();
+    int ssize = s.size();
+    sort(g.begin(),g.end());
+    sort(s.begin(),s.end());
+
+    while(i < gsize && j < ssize) {
+        if(s[j] >= g[i]) {
+            i++;
+            count++;
+        }
+        j++; 
+    }
+      
+    return count;
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Problem : Array Pair Sum Divisibility Problem (GeeksforGeeks)
+
+Time Complexity    : O(N)
+Space Complexity   : O(N)
+
+[Concept] : 
+If (a + b) % n == 0 
+and , if a % n = x and b % n = y
+then , x + y = n
+
+So, if we have to find wether a number divides a pair or not we check it using the above concept
+If you are given an array of integers and we have to find two numbers (a , b) such that their sum is divisible by k
+first, we calculate the remainder r1 = a % k;
+and then we search for a number whose remainder (r2) is k - r1 (since, r1 + r2 = k)
+and if we got such a number b having rem. k - r1, then the numbers a and b are one of the answers
+
+bool canPair(vector<int> nums, int k) {
+    // Code here.
+    int size = nums.size();
+    if(size & 1 == 0) {
+        return false;
+    }
+    
+    unordered_map<int,int> mp;
+    int rem = 0;
+    for(auto i: nums) {
+        int r = i % k; 
+        if(mp[k-r] > 0) {
+            mp[k-r]--;
+            rem--;
+        } else if(r == 0 && mp[0] > 0) {
+            mp[0]--;
+            rem--;
+        } else {
+            mp[r]++;
+            rem++;
+        }
+    }
+
+    return rem == 0 ? true : false;
+}
