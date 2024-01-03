@@ -1,0 +1,104 @@
+Problem : Convert an Array Into a 2D Array With Conditions (2610 Leetcode)
+
+Time Complexity : O(N*N)
+Space Complexity : O(N*N)
+
+[Concept]
+
+Number of rows = most frequent element
+Push the all keys stored in the map in a form of vector and decrease their occourences != 0 on each push
+push the each row formed above in the ans vector
+
+[Code]
+
+vector<vector<int>> findMatrix(vector<int>& nums) {
+    int rows = INT_MIN;
+    unordered_map<int,int> mp;
+    vector<vector<int>> ans;
+
+    for(auto it : nums)  {
+        mp[it]++;
+        rows = max(rows, mp[it]);
+    }
+    
+    for(int i = 0 ; i < rows; i++) {
+        vector<int> v;
+        for(auto m : mp) {
+            if(mp[m.first] > 0) {
+                v.push_back(m.first);
+                mp[m.first]--;
+            }
+        }
+        ans.push_back(v);
+    }
+    return ans;
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Problem : Largest Sum Subarray of Size at least K
+
+Time Complexity : O(N)
+Space Complexity : O(N)
+
+[Concept]
+
+We have to find the max sum sub array with atleast K length, if we were only saked for max sum sub array then we were using Kadane's Algo but the contrainet of atleast K length make this problem different.
+What if we find all the K length subarrays it may or may not conatain the max sum subarray but it has atleast k length what if we add any subarray that can increase the sum of the k length subarray resulting to a new max sum 
+subarray having length atleast k then it will be bettrer since we have to maintain the subarray we can only add a new subarray that is just behind  the k length subaarya so that both the subarrays form a new subarray.
+We firts find the best sum subarray at each point of the array and if the best at each element of array is positive (means it will definately increase the k length subarray just starting from the next element) then 
+we add it to the k len subarray resulting in the increase int that k len subarray.
+
+              [Arrow showing the best max sum at till that element]  
+            
+                                -------------------------------------->-1
+                                -------------------------------->7
+                                ---------------------------->9
+                                ---------------------->14
+              ------------->-1  ---------------->15
+              --------->0       ----------->15                              --------->11
+              ---->3            ------>7                                    ----->8
+              -> 1              ->4                                         ->6
+idx:          0    1    2    3    4    5    6    7     8     9    10    11    12   13   14
+ARR:          1    2   -3   -1    4    3    8    0    -1    -5    -2    -8    6    2    3
+if we  find the max of each k length subarray + best max sum just before the starting of k len subarray we get our answer in this case , max sum Subaarya haiving atleast 4 len is : 15
+
+[code]
+
+long long int solve(long long int arr[], long long int N, long long int k) {
+    long long int ans = INT_MIN;
+    vector<int> AlltimeBest(N, 0);
+    AlltimeBest[0] = arr[0];
+
+    int i = 1;
+    while (i < N) {
+        if (AlltimeBest[i - 1] >= 0) {
+            AlltimeBest[i] = arr[i] + AlltimeBest[i - 1];
+        } else {
+            AlltimeBest[i] = arr[i];
+        }
+        i++;
+    }
+
+    int kWindowsum = 0;
+    for (int i = 0; i < k; i++) {
+        kWindowsum += arr[i];
+    }
+    if(ans < kWindowsum) {
+        ans = kWindowsum;
+    }
+
+    for (int i = k; i < N; i++) {
+        kWindowsum = kWindowsum + arr[i] - arr[i - k];
+        if(kWindowsum > ans) {
+            ans = kWindowsum;
+        }
+
+        int morethanK = kWindowsum + AlltimeBest[i-k];
+        if(morethanK > ans) {
+        ans = morethanK;
+        }
+    }
+    return ans;
+}
+
