@@ -1,0 +1,65 @@
+Problem : Number of Laser Beams in a Bank (2125 Leetcode)
+
+Time Complexity : O(N*N)
+space Complexity : O(1)
+
+[concept]
+
+conunt 1's in each row and multiply it with prev rows number of 1's and keep adding on each step
+
+[code]
+
+int numberOfBeams(vector<string>& bank) {
+    int ans = 0;
+    int prev = 0;
+    for(auto i: bank) {
+        int count_one = 0;
+        for(auto j: i) {
+            if(j == '1') count_one++;
+        }
+        if(count_one != 0) {
+            ans = ans + count_one * prev;
+            prev = count_one;
+        }
+    }
+    return ans;
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Problem : Number of Laser Beams in a Bank (2125 Leetcode)
+
+Time Complexity : O(N)
+space Complexity : O(1)
+
+[concept]
+
+Use sliding window and find min length
+
+[code]
+
+int smallestSubstring(string S) {
+    int fast = 0;
+    int slow = 0;
+    int N = S.size();
+    int ans = INT_MAX;
+    int z = 0;
+    int o = 0;
+    int t = 0;
+
+    while (fast < N) {
+        if (S[fast] == '0') z++; 
+        else if (S[fast] == '1') o++;
+        else if (S[fast] == '2') t++;
+        fast++;
+
+        while (z > 0 && o > 0 && t > 0) {
+            ans = min(ans, fast - slow); 
+            if (S[slow] == '0') z--;
+            else if (S[slow] == '1') o--;
+            else if (S[slow] == '2') t--;
+            slow++;
+        }
+    }
+    return ans == INT_MAX ? -1 : ans;
+}
