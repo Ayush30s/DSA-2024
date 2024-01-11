@@ -1,0 +1,102 @@
+Leetcode:
+Problem : 1235. Maximum Profit in Job Scheduling
+
+[concept]: As we need to calculate max profit in doning no-overlaping work we have always 2 options of picking work
+ex -  
+                   0  1  2  3
+      startTime = [1, 2, 3, 3], 
+      endTime   = [3, 4, 5, 6], 
+      profit    = [50,10,40,70]
+      
+when we are at index 0 i have two options (pick the oth job or do not) 
+- if i pick the 0th(1st) job i wll have profit of 50
+- know i will find a job whose starting time >= my current Job's(0th Job) ending time (Non overlapping Job)
+- i this case 3rd job has starting time = 3 >= 1st job. Know again we ahve two options i f i pick it or not pick it
+- if pick that job my profit become 50 + 40 = 90
+- if i don't pick it and move forward for a job whise starting is graeter then my ending i will get 4th job 
+whose starting time(3) >= previous job's ending time(3)
+- know i have two options again if i pick it or not 
+- if i pick it i have profit of 50 + 70 = 120
+- if don't pick it i will have only 50 profit
+
+the above set of operation will be done as we start from each index 
+
+
+                                    (Job 4) |---------------------------| (profit = 70)
+                                    (Job 3) |------------------| (profit = 40)
+                         (Job 2) |--------------------| (profit = 10)
+              (Job 1) |---------------------| (profit = 50)
+         <------------1----------2----------3---------4---------5--------6----------->
+                                     Time ->
+
+Its a simple pick not pick question:
+
+[Code] : 
+
+    int n;
+    int memo[50001];
+    
+    //find the first job jiska startring point is greater than current job ka end point using Binary Search
+    int geNextIndex(vector<vector<int>>& array, int l, int target) {
+        int r = n - 1;
+        int result = n+1;
+        while(l <= r) {
+            int mid = l + (r-l)/2;
+
+            if(array[mid][0] >= target) {
+                result = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return result;
+    }
+
+    //finds the maximum profit that can be achieved by pick and not pick concept
+    int solve(vector<vector<int>>& array, int i) {
+        if(i >= n) {
+            return 0;
+        }
+
+        if(memo[i] != -1) {
+            return memo[i];
+        }
+
+        //search for the next job whose starting time >= current Job's ending time
+        int next = geNextIndex(array,i+1,array[i][1]);
+
+        //pick
+        int taken = array[i][2] + solve(array,next);
+        
+        //not pick
+        int notTaken = solve(array,i+1);
+
+        return memo[i] = max(taken, notTaken);
+    }
+    
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        memset(memo , -1, sizeof(memo));
+        n = startTime.size();
+        vector<vector<int>> array(n, vector<int>(3,0));
+
+        //making  a 2D array ro store the starting , ending and profit of each job
+        for(int i = 0; i < n; i++) {
+            array[i][0] = startTime[i];
+            array[i][1] = endTime[i];
+            array[i][2] = profit[i];
+        }
+
+        //sort on the basis of starting time of all job
+        sort(begin(array),end(array));
+        
+        return solve(array,0);
+    }
+
+
+
+
+
+
+
+                                    
