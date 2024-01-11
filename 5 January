@@ -1,0 +1,25 @@
+Leetcode:
+Problem : 300. Longest Increasing Subsequence
+
+[Concept]:
+Calculate all the subsequence using double for loop. And if the next value is greater than the current value,
+add its length to the subsequence and create. a DP to update the maximum length subsequence 
+
+[code]:
+
+int lengthOfLIS(vector<int>& nums) {
+      int n = nums.size();
+      if (n <= 1) return n;
+
+      vector<int> dp(n, 1);
+
+      for (int i = 1; i < n; ++i) {
+          for (int j = 0; j < i; ++j) {
+              if (nums[i] > nums[j]) {
+                  dp[i] = max(dp[i], dp[j] + 1);
+              }
+          }
+      }
+
+      return *max_element(dp.begin(), dp.end());
+  }
