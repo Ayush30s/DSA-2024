@@ -1,0 +1,61 @@
+Leetcode:
+Problem: 2385. Amount of Time for Binary Tree to Be Infected
+
+[Concept]:
+Convert the binary tree into graph using map to store all the neighbour of each node
+know we apply BFS on the graph , for all neighbour of each node.
+After a node and all its neightbour gets infected we increase the time by 1 and move to the next node.
+
+
+[Code]:
+void graph(TreeNode* root, int parent, unordered_map<int,vector<int>> &adj) {
+        if(root == NULL) {
+            return;
+        }
+
+        if(parent != -1) {
+            adj[root->val].push_back(parent);
+        }
+
+        if(root->left) {
+            adj[root->val].push_back(root->left->val);
+            graph(root->left, root->val, adj);
+        }
+
+        if(root->right) {
+            adj[root->val].push_back(root->right->val);
+            graph(root->right, root->val, adj);
+        }
+    } 
+
+    int amountOfTime(TreeNode* root, int start) {
+        unordered_map<int, vector<int>> adj;
+        graph(root,-1,adj);
+
+        queue<int> q;
+        unordered_set<int> st;
+        
+        q.push(start);
+        st.insert(start);
+        int minutes = 0;
+
+        while(!q.empty()) {
+            int n = q.size();
+
+            while(n--) {
+                int current = q.front();
+                q.pop();
+
+                for(auto &i : adj[current]) {
+                    if(st.find(i) == st.end()) {
+                        q.push(i);
+                        st.insert(i);
+                    }
+                }
+            }
+
+            minutes++;
+        }
+        
+        return minutes-1;
+    }
