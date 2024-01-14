@@ -1,0 +1,31 @@
+Leetcode:
+Problem : 938. Range Sum of BST
+
+
+[Concept] :
+Do inorder traversal and if the node lies in the range [l , r] sum add it in the ans.
+
+
+[Code] :
+class Solution {
+public:
+
+    int sum = 0;
+    void solve(TreeNode* root, int low, int high) {
+        //base case
+        if(root == NULL) {
+            return;
+        }
+
+        solve(root->left,low,high);
+        if(root->val >= low && root->val <= high) {
+            sum += root->val;
+        }
+        solve(root->right,low,high);
+    }
+
+    int rangeSumBST(TreeNode* root, int low, int high) {
+        solve(root,low,high);
+        return sum;
+    }
+};
