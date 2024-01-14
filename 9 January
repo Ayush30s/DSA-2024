@@ -1,0 +1,49 @@
+Leetcode :
+Problem : 872. Leaf-Similar Trees
+
+[Concept] : 
+if the node is leaf node store it in the vector for ech input trees and check if the nodes are in the same order or not
+
+
+[Code] :
+
+Time Complexity : O(N)
+Space Complexity : max O(H,N), where H is the height of the tree and N is the total number of trees in larger of boeth the trees
+
+class Solution {
+public:
+
+    void LeafSequence(TreeNode* root, vector<int>& ls) {
+        //base case
+        if(root == NULL) {
+            return;
+        }
+
+        if(root->left == NULL && root->right == NULL) {
+            ls.push_back(root->val);
+        }
+
+        LeafSequence(root->left,ls);
+        LeafSequence(root->right,ls);
+    }
+
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        vector<int> ls1;
+        vector<int> ls2;
+        
+        LeafSequence(root2,ls2);
+        LeafSequence(root1,ls1);
+
+        int ls1size = ls1.size();
+        int ls2size = ls2.size();
+
+        if(ls1size != ls2size)
+            return false;
+
+        for(int i = 0 ; i < ls1size; i++) {
+            if(ls1[i] != ls2[i]) return false;
+        }
+
+        return true;
+    }
+};
