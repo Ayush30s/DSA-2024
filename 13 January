@@ -1,0 +1,33 @@
+Leetcode:
+Problem :1347. Minimum Number of Steps to Make Two Strings Anagram
+
+[Concept]:
+store the frquency of each char of string s in a map, itterate over t and decrease the freq of char in the map that are also in t and at last check if we get a char left with freq greater
+than 0 it means we have a common  char in s  and t which occours more in t than s so we have to replace that extra occourence of that char from the string and that is our answer
+
+
+{Code}:
+class Solution {
+public:
+    int minSteps(string s, string t) {
+        map<char, int> m1;
+
+        for (auto i : s) {
+            m1[i]++;
+        }
+
+        for (auto i : t) {
+            m1[i]--;
+        }
+
+        int count = 0;
+
+        for (auto i : m1) {
+            if (i.second > 0) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+};
