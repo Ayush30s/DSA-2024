@@ -1,0 +1,46 @@
+Leetcode:
+problem : 1026. Maximum Difference Between Node and Ancestor
+
+[Concept]:
+
+Go to each Node of the tree and for each node find the maximum difference that can be achieved between that node and its child.
+Do this for all Nodes and store the max ans among all these answers that we get from each node and return it
+
+
+{Code}:
+
+class Solution {
+public:
+    void difference(TreeNode* node, int node_val, int& max_diff) {
+        //base case
+        if(node == NULL) {
+            return;
+        }
+
+        int data = node->val;
+        max_diff = max(max_diff, abs(node_val - data));
+
+        difference(node->left, node_val, max_diff);
+        difference(node->right, node_val, max_diff);
+    }
+
+    int ans = -1;
+    void maxAncestorDiff1(TreeNode* root) {
+        //base case
+        if(root == NULL) {
+            return;
+        }
+    
+        int max_diff = INT_MIN;
+        difference(root, root->val, max_diff);
+        ans = max(ans, max_diff);
+        
+        maxAncestorDiff1(root->left);
+        maxAncestorDiff1(root->right);
+    }
+
+    int maxAncestorDiff(TreeNode* root) {
+        maxAncestorDiff1(root);
+        return ans;
+    }
+};
